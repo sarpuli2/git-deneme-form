@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block body %}
+<head>
+  <script src="https://www.google.com/recaptcha/enterprise.js?render=6LeDSQYqAAAAAMjgwNs3O48cfMsdQE4C-sbjL3Cr"></script>
+  <!-- Your code -->
+</head>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h1>Form</h1>
+                {{ form|crispy }}
+                {{ form.media }}
+                <script>
+                  function onClick(e) {
+                    e.preventDefault();
+                    grecaptcha.enterprise.ready(async () => {
+                      const token = await grecaptcha.enterprise.execute('6LeDSQYqAAAAAMjgwNs3O48cfMsdQE4C-sbjL3Cr', {action: 'LOGIN'});
+                    });
+                  }
+                </script>
+                <input class="btn btn-primary" type="submit" value="Gönder">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<style>
+    .card-frame {
+        border: 1px solid #dee2e6; /* Çerçeve rengi ve kalınlığı */
+        border-radius: 8px; /* Çerçeve köşe yuvarlama */
+        padding: 10px; /* İçerik ile çerçeve arasındaki boşluk */
+        margin-bottom: 20px; /* Kartların arasındaki boşluk */
+    }
+</style>
+<div class="container">
+    {% for post in posts %}
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="thumbnail">
+                <div class="caption">
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" class="img-responsive">
+                    {% endif %}
+                    <div class="row"> <!-- Butonları yan yana sıralamak için bir iç row oluşturduk -->
+                        <div class="col-md-4 col-xs-4">
+                            <h3>{{ post.title }}<small>{{ post.publishing_date | timesince }} önce</small></h3>
+                            <h4>Yazar: {{ post.user.get_full_name }}</h4>
+                            <p>{{ post.content |safe| linebreaks | truncatewords:15 }}</p>
+                        </div>
+                        <div class="col-md-4 col-xs-4">
+                            <p>
+                                <a href="{{ post.get_absolute_url }}" class="btn btn-primary btn-block">İncele</a>
+                            </p>
+                        </div>
+                        {% if request.user.is_authenticated %}
+                        <div class="col-md-4 col-xs-4">
+                            <p>
+                                <a href="{{ post.get_update_url }}" class="btn btn-default btn-block">Güncelle</a>
+                            </p>
+                        </div>
+                        <div class="col-md-4 col-xs-4">
+                            <p>
+                                <a href="{{ post.get_delete_url }}" class="btn btn-danger btn-block" onclick="return confirm('Bu işlemi gerçekten yapmak istediğinizden emin misiniz?')">Sil</a>
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ post.publishing_date }}<br><br>
+    {% endfor %}
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="pagination">
+                <span class="step-links">
+                    {% if posts.has_previous %}
+                        <a href="?page={{ posts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Önceki</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Sayfa {{ posts.number }} / {{ posts.paginator.num_pages }}
+                    </span>
+
+                    {% if posts.has_next %}
+                        <a href="?page={{ posts.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Sonraki</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

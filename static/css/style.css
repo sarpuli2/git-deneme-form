@@ -1,0 +1,9 @@
+body {
+  padding-top: 70px;
+  background-color: lightcoral;
+}
+.comment-content {
+    max-width: 300px;
+    word-wrap: break-word;
+    white-space: normal;
+}
